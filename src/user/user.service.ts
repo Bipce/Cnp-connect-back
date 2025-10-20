@@ -13,7 +13,7 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     return await this.userRepository.findMany();
   }
 
