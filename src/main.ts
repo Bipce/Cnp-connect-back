@@ -3,7 +3,7 @@ import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import { PrismaExeptionFilter } from "./utils/filters/prisma-exeption.filter";
 import { CustomHttpExceptionFilter } from "./utils/filters/custom_http_exception.filter copy";
-import { CustomNatsExceptionFilter } from "./utils/filters/custom_nats_exception.filter";
+// import { CustomNatsExceptionFilter } from "./utils/filters/custom_nats_exception.filter";
 
 const port = process.env.PORT ?? 3000;
 
@@ -20,7 +20,7 @@ async function bootstrap() {
   app.useGlobalFilters(
     new PrismaExeptionFilter(),
     new CustomHttpExceptionFilter(),
-    new CustomNatsExceptionFilter(),
+    // new CustomNatsExceptionFilter(),
   );
   await app.listen(port);
 }
