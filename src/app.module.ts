@@ -4,9 +4,16 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { EmailModule } from "./utils/mail/email.module";
 import { TokenService } from "./auth/token.service";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, EmailModule],
+  imports: [
+    PrismaModule,
+    UserModule,
+    AuthModule,
+    EmailModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
   providers: [TokenService],
 })
 export class AppModule {}

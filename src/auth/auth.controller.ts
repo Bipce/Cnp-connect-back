@@ -176,6 +176,11 @@ export class AuthController {
       message: "Mot de passe modifié avec succés.",
     };
   }
+
+  @Post("google/callback")
+  connectViaGoogle() {
+    console.log("test");
+  }
 }
 
 // http://localhost:3000/auth/change-password?token=05c0ea12-93bb-4c44-adf0-6f0d54af33fc
