@@ -1,98 +1,211 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CNP-Connect – Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📌 Project Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+CNP-Connect is an internal web application designed for public transportation companies.  
 
-## Description
+This repository contains the **backend** of the application, developed with **NestJS** and **TypeScript**, using **Prisma** as the ORM for the relational database.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## 📦 Parent Repository
 
-```bash
-$ npm install
+This project is part of: https://github.com/peter-francois/cnp-connect-resources
+
+---
+
+## 🔁 Repository Origin & DevOps
+
+This repository is a **mirror of the original GitLab repository** for the CNP-Connect project. It therefore reflects the state of the code originally developed on GitLab.
+
+### 🐳 Containerization
+
+Dockerfiles are provided to containerize the backend, allowing reproducible execution in both local and production environments.
+
+### 🔃 CI/CD (GitLab)
+
+The project integrates a **GitLab CI/CD pipeline** (`.gitlab-ci.yml`) enabling:
+
+- automatic application build,
+- Docker image creation,
+- automated testing of the generated image,
+- pushing the image to the GitLab container registry.
+
+---
+
+## 🏗️ Backend Architecture
+
+The backend follows a **modular NestJS architecture**, organized by business domain.
+
+Each module generally contains:
+
+- **Controller** → exposes HTTP endpoints  
+- **Service** → contains business logic  
+- **Repository / Prisma** → data access layer  
+- **DTO** → validation and typing of incoming data  
+
+### Main Modules
+
+- **Auth** → authentication, token management, guards  
+- **Users** → user and role management  
+- **Alerts** → alert management  
+- **Assignments** → assignment management  
+
+---
+
+## 🛠️ Tech Stack
+
+| Tool            | Usage                     |
+| --------------- | ------------------------- |
+| **NestJS**       | Backend framework         |
+| **TypeScript**   | Static typing             |
+| **Prisma**       | ORM                       |
+| **MySQL**        | Relational database       |
+| **JWT**          | Authentication            |
+| **class-validator** | DTO validation        |
+| **Docker**       | Containerization          |
+
+---
+
+## 🔐 Backend Security
+
+### Environment Variables
+
+Sensitive variables are stored in a `.env` file (excluded from version control).
+
+### CORS
+
+CORS is configured to restrict which origins are allowed to call the API from a browser.
+
+### Error Handling
+
+- Use of custom HTTP exceptions  
+- Global filter for Prisma errors to improve debugging  
+- Detailed error messages in development, masked in production  
+
+---
+
+## 🔑 Authentication (JWT)
+
+Authentication is based on **JSON Web Tokens (JWT)**.
+
+### Access Token
+
+- Short lifespan  
+- Verified on each request via an Auth Guard  
+- Contains only the user identifier (minimum claims principle)  
+
+### Refresh Token
+
+- Stored client-side in an `httpOnly` cookie  
+- Stored in the database and linked to a session to support multi-device usage  
+- Allows generating new tokens without requiring the user to log in again  
+
+### TokenService
+
+A dedicated service manages:
+
+- token creation,  
+- token validation,  
+- extraction from headers and cookies.  
+
+---
+
+## 🌐 API Endpoints (General Principles)
+
+The API follows REST conventions:
+
+- `POST /auth/login` → authentication  
+- `GET /users` → list of users  
+- `GET /users/:id` → user details  
+- `POST /alerts` → create an alert  
+- `PATCH /assignments` → reassign an assignment  
+
+---
+
+## 📁 Project Structure (Simplified)
+```
+src/
+│── app.module.ts
+│
+│── auth/
+│ ├── auth.controller.ts
+│ ├── auth.service.ts
+│ ├── auth.guard.ts
+│ └── token.service.ts
+│
+│── user/
+│ ├── user.controller.ts
+│ ├── user.service.ts
+│ ├── user.repository.ts
+│ └── dto/
+│
+│── alert/
+│ ├── alert.controller.ts
+│ ├── alert.service.ts
+│
+│── utils/
+│ ├── exceptions/
+│ └── filters/
+│
+│── main.ts
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## ⚙️ Configuration
 
-# watch mode
-$ npm run start:dev
+Make sure you have:
 
-# production mode
-$ npm run start:prod
+- Node.js installed  
+- MySQL running locally or via Docker  
+
+An `.env.example` file is provided as a configuration template.
+
+To use it:
+
+``` bash
+cp .env.example .env
+```
+Then fill in the values according to your environment.
+
+---
+
+## 🚀 Run the project locally
+Install dependencies:
+``` bash
+npm install
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+Generate Prisma client:
+``` bash
+npx prisma generate
 ```
 
-## Deployment
+Run the backend:
+``` bash
+npm run start:dev
+```
+By default: http://localhost:3000
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🧪 Tests (Jest)
+The project includes automated unit tests with Jest.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+Commands:
+``` bash
+npm run test
+npm run test:watch
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 📬 Contact
+If you have any questions, suggestions, or would like to discuss the project, feel free to contact me:
 
-Check out a few resources that may come in handy when working with NestJS:
+Email: contact@peterfrancois.dev  
+LinkedIn: https://www.linkedin.com/in/peterfrancois/  
+GitHub: https://github.com/peter-francois/  
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Feel free to open an issue or submit a pull request if you’d like to contribute to the project.
