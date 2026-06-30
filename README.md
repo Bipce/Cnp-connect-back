@@ -1,211 +1,231 @@
-# CNP-Connect – Backend
+# 🚉 CNP Connect — Backend
 
-## 📌 Project Overview
+![NestJS](https://img.shields.io/badge/NestJS-11-E0234E?logo=nestjs)
+![TypeScript](https://img.shields.io/badge/TypeScript-typed-blue?logo=typescript)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)
+![MySQL](https://img.shields.io/badge/MySQL-database-4479A1?logo=mysql)
+![JWT](https://img.shields.io/badge/JWT-auth-000000?logo=jsonwebtokens)
 
-CNP-Connect is an internal web application designed for public transportation companies.  
+## 📖 Overview
 
-This repository contains the **backend** of the application, developed with **NestJS** and **TypeScript**, using **Prisma** as the ORM for the relational database.
+CNP Connect is the backend application of a rail operations platform. It exposes a REST
+API consumed by the frontend to manage users, authentication and alerts.
 
----
+The API handles a complete authentication flow (sign in, token refresh, password reset),
+role-based access for drivers, coordinators and supervisors, and the creation and
+retrieval of prioritized alerts.
 
-## 📦 Parent Repository
-
-This project is part of: https://github.com/peter-francois/cnp-connect-resources
-
----
-
-## 🔁 Repository Origin & DevOps
-
-This repository is a **mirror of the original GitLab repository** for the CNP-Connect project. It therefore reflects the state of the code originally developed on GitLab.
-
-### 🐳 Containerization
-
-Dockerfiles are provided to containerize the backend, allowing reproducible execution in both local and production environments.
-
-### 🔃 CI/CD (GitLab)
-
-The project integrates a **GitLab CI/CD pipeline** (`.gitlab-ci.yml`) enabling:
-
-- automatic application build,
-- Docker image creation,
-- automated testing of the generated image,
-- pushing the image to the GitLab container registry.
+This project was developed collaboratively, with a focus on a modular NestJS
+architecture, strong input validation and a secure, token-based authentication system.
 
 ---
 
-## 🏗️ Backend Architecture
+## 🧰 Tech Stack
 
-The backend follows a **modular NestJS architecture**, organized by business domain.
-
-Each module generally contains:
-
-- **Controller** → exposes HTTP endpoints  
-- **Service** → contains business logic  
-- **Repository / Prisma** → data access layer  
-- **DTO** → validation and typing of incoming data  
-
-### Main Modules
-
-- **Auth** → authentication, token management, guards  
-- **Users** → user and role management  
-- **Alerts** → alert management  
-- **Assignments** → assignment management  
+- NestJS 11 + TypeScript
+- Prisma ORM + MySQL
+- JWT access & refresh tokens (`@nestjs/jwt`)
+- Argon2 (password hashing) + CryptoJS (encryption)
+- class-validator / class-transformer (DTO validation)
+- @nestjs-modules/mailer (transactional emails)
+- Jest + Supertest (unit & e2e testing)
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Quick Start
 
-| Tool            | Usage                     |
-| --------------- | ------------------------- |
-| **NestJS**       | Backend framework         |
-| **TypeScript**   | Static typing             |
-| **Prisma**       | ORM                       |
-| **MySQL**        | Relational database       |
-| **JWT**          | Authentication            |
-| **class-validator** | DTO validation        |
-| **Docker**       | Containerization          |
-
----
-
-## 🔐 Backend Security
-
-### Environment Variables
-
-Sensitive variables are stored in a `.env` file (excluded from version control).
-
-### CORS
-
-CORS is configured to restrict which origins are allowed to call the API from a browser.
-
-### Error Handling
-
-- Use of custom HTTP exceptions  
-- Global filter for Prisma errors to improve debugging  
-- Detailed error messages in development, masked in production  
-
----
-
-## 🔑 Authentication (JWT)
-
-Authentication is based on **JSON Web Tokens (JWT)**.
-
-### Access Token
-
-- Short lifespan  
-- Verified on each request via an Auth Guard  
-- Contains only the user identifier (minimum claims principle)  
-
-### Refresh Token
-
-- Stored client-side in an `httpOnly` cookie  
-- Stored in the database and linked to a session to support multi-device usage  
-- Allows generating new tokens without requiring the user to log in again  
-
-### TokenService
-
-A dedicated service manages:
-
-- token creation,  
-- token validation,  
-- extraction from headers and cookies.  
-
----
-
-## 🌐 API Endpoints (General Principles)
-
-The API follows REST conventions:
-
-- `POST /auth/login` → authentication  
-- `GET /users` → list of users  
-- `GET /users/:id` → user details  
-- `POST /alerts` → create an alert  
-- `PATCH /assignments` → reassign an assignment  
-
----
-
-## 📁 Project Structure (Simplified)
-```
-src/
-│── app.module.ts
-│
-│── auth/
-│ ├── auth.controller.ts
-│ ├── auth.service.ts
-│ ├── auth.guard.ts
-│ └── token.service.ts
-│
-│── user/
-│ ├── user.controller.ts
-│ ├── user.service.ts
-│ ├── user.repository.ts
-│ └── dto/
-│
-│── alert/
-│ ├── alert.controller.ts
-│ ├── alert.service.ts
-│
-│── utils/
-│ ├── exceptions/
-│ └── filters/
-│
-│── main.ts
-```
-
----
-
-## ⚙️ Configuration
-
-Make sure you have:
-
-- Node.js installed  
-- MySQL running locally or via Docker  
-
-An `.env.example` file is provided as a configuration template.
-
-To use it:
-
-``` bash
-cp .env.example .env
-```
-Then fill in the values according to your environment.
-
----
-
-## 🚀 Run the project locally
 Install dependencies:
-``` bash
+
+```bash
 npm install
 ```
 
-Generate Prisma client:
-``` bash
+Set up the database (generate the Prisma client and run migrations):
+
+```bash
 npx prisma generate
+npx prisma migrate dev
 ```
 
-Run the backend:
-``` bash
+Run the development server:
+
+```bash
 npm run start:dev
 ```
-By default: http://localhost:3000
 
----
+Other available scripts:
 
-## 🧪 Tests (Jest)
-The project includes automated unit tests with Jest.
+```bash
+npm run start        # Start the server
+npm run start:prod   # Start from the compiled build (dist/)
+npm run build        # Compile the project
+npm run lint         # Run ESLint (with --fix)
+npm run format       # Format with Prettier
+npm run test         # Unit tests
+npm run test:e2e     # End-to-end tests
+npm run test:cov     # Test coverage
+```
 
-Commands:
-``` bash
-npm run test
-npm run test:watch
+Seed the database with sample data:
+
+```bash
+npx prisma db seed
 ```
 
 ---
 
-## 📬 Contact
-If you have any questions, suggestions, or would like to discuss the project, feel free to contact me:
+## 🔐 Environment Variables
 
-Email: contact@peterfrancois.dev  
-LinkedIn: https://www.linkedin.com/in/peterfrancois/  
-GitHub: https://github.com/peter-francois/  
+Create a `.env` file at the root of the project (see `.env.example`):
 
-Feel free to open an issue or submit a pull request if you’d like to contribute to the project.
+```bash
+DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+NODE_ENV=development        # development | production | test
+PORT=3000
+ACCESS_JWT_SECRET=your_access_token_secret
+REFRESH_JWT_SECRET=your_refresh_token_secret
+TOKEN_TYPE=Bearer           # Basic | Oauth | Bearer
+CRYPTO_SECRET=your_crypto_secret
+FRONTEND_URL=http://localhost:5173
+```
+
+---
+
+## 🚀 Features
+
+- Authentication with JWT access & refresh tokens
+- Sign in with email and password
+- Password reset flow via email (forgot / reset password)
+- Secure session handling with HTTP cookies
+- Role-based access control (Supervisor, Coordinator, Driver)
+- User management (creation, listing, details, update)
+- Alert management with priority levels and line filtering
+- Global validation and centralized exception handling
+
+---
+
+## 🏗️ Project Structure
+
+The project follows the modular NestJS architecture, with one module per domain.
+
+```text
+src/
+│
+├── auth/         # Authentication (controller, service, guards, DTOs)
+├── user/         # User management (controller, service, DTOs)
+├── alert/        # Alerts (controller, service, DTOs)
+├── utils/        # Shared utilities
+│   ├── enums/        # Shared enums
+│   ├── filters/      # Global exception filters
+│   ├── hash/         # Password hashing (Argon2)
+│   ├── mail/         # Email module
+│   └── seed/         # Database seeding
+│
+├── app.module.ts # Root module
+└── main.ts       # Application entry point
+
+prisma/           # Prisma schema and migrations
+```
+
+### Structure Overview
+
+- **auth/** – Sign in, token refresh, password reset and route guards.
+- **user/** – CRUD operations on user accounts.
+- **alert/** – Creation and retrieval of alerts.
+- **utils/** – Cross-cutting concerns: filters, hashing, mailing and seeding.
+- **prisma/** – Database schema, client and migrations.
+
+---
+
+## 🔑 Authentication & Authorization
+
+Authentication relies on JWT access tokens and refresh tokens.
+
+- Passwords are hashed with **Argon2**; sensitive values are encrypted with **CryptoJS**.
+- Refresh and reset-password tokens are persisted in the database (`Token` model).
+- Login is handled with email and password, returning a short-lived access token and a
+  refresh token.
+- Route guards enforce authentication and role-based access:
+  `access-token`, `refresh-token`, `coordinator` and `supervisor` guards.
+
+Roles available: **Supervisor**, **Coordinator** and **Driver**.
+
+---
+
+## 📡 API Endpoints
+
+All routes are prefixed with `/api`.
+
+### Auth — `/api/auth`
+
+| Method | Path               | Description                          |
+| ------ | ------------------ | ------------------------------------ |
+| GET    | `/me`              | Current authenticated user           |
+| POST   | `/signin`          | Sign in with email and password      |
+| POST   | `/refresh-token`   | Refresh the access token             |
+| POST   | `/forgot-password` | Request a password reset email       |
+| POST   | `/reset-password`  | Reset the password using a token     |
+| POST   | `/signout`         | Sign out                             |
+
+### Users — `/api/users`
+
+| Method | Path    | Description          |
+| ------ | ------- | -------------------- |
+| POST   | `/`     | Create a user        |
+| GET    | `/`     | List all users       |
+| GET    | `/:id`  | Get a user by id     |
+| PATCH  | `/:id`  | Update a user        |
+
+### Alerts — `/api/alerts`
+
+| Method | Path              | Description                  |
+| ------ | ----------------- | ---------------------------- |
+| POST   | `/`               | Create an alert              |
+| GET    | `/`               | List alerts                  |
+| GET    | `/:id`            | Get an alert by id           |
+| GET    | `/lines/:lineId`  | List alerts for a given line |
+
+---
+
+## 🗄️ Data Model
+
+The database is managed with Prisma (MySQL). Core entities include:
+
+- **User** – Accounts with role, status and connection state.
+- **Token** – Refresh and reset-password tokens.
+- **Alert** – Alerts with content and priority, linked to users and lines.
+
+The schema also models lines, trains, travels and a messaging domain
+(conversations, messages, read receipts).
+
+---
+
+## 🧪 Testing
+
+Tests are written with Jest and Supertest.
+
+```bash
+npm run test       # Unit tests
+npm run test:e2e   # End-to-end tests
+npm run test:cov   # Coverage
+```
+
+---
+
+## 📦 Deployment
+
+The project ships with Docker support and a GitLab CI pipeline:
+
+- `dockerfile.dev` – Development image.
+- `dockerfile.prod` – Production image.
+- `.gitlab-ci.yml` – Continuous integration pipeline.
+
+The application runs behind the global `/api` prefix, with CORS restricted to the
+frontend URL and validation enabled globally.
+
+---
+
+## 🤝 Collaboration
+
+This project was developed collaboratively, alongside the CNP Connect frontend, with
+regular code reviews and technical discussions throughout the development.
