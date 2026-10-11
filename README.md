@@ -6,6 +6,8 @@
 ![MySQL](https://img.shields.io/badge/MySQL-database-4479A1?logo=mysql)
 ![JWT](https://img.shields.io/badge/JWT-auth-000000?logo=jsonwebtokens)
 
+🔗 **Frontend repository:** [Cnp-connect-front](https://github.com/Bipce/Cnp-connect-front)
+
 ## 📖 Overview
 
 CNP Connect is the backend application of a rail operations platform. It exposes a REST
