@@ -229,5 +229,6 @@ frontend URL and validation enabled globally.
 
 ## 🤝 Collaboration
 
-This project was developed collaboratively, alongside the CNP Connect frontend, with
-regular code reviews and technical discussions throughout the development.
+This project was developed collaboratively by **Claire Royer**, **Peter François** and
+**Nicolas Palay**, alongside the CNP Connect frontend, with regular code reviews and
+technical discussions throughout the development.
