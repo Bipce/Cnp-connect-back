@@ -93,7 +93,7 @@ FRONTEND_URL=http://localhost:5173
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
 - Authentication with JWT access & refresh tokens
 - Sign in with email and password
